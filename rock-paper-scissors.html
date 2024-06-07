@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+
+        body {
+            padding: 0;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 50px;
+        }
+
+        #container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+            padding: 10px;
+        }
+
+        #rules {
+            width: 100%;
+        }
+
+        #gameContainer {
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        #stats {
+            width: 100%;
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+        }
+
+        #playerStats, #computerStats {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 5px;
+        }
+
+        #userInput {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        #userInput img {
+            width: 100px;
+            height: 100px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+        }
+
+        #choices {
+            display: flex;
+            justify-content: space-around;
+            width: 100%;
+        }
+
+        button {
+            background-color: transparent;
+            border: 1px solid black;
+            border-radius: 5px;
+            padding: 5px;
+            font-size: 16px;
+        }
+
+        button:hover {
+            background-color: black;
+            color: white;
+            border: 1px solid white;
+        }
+
+        #playerScoreLabel, #computerScoreLabel {
+            font-weight: bolder;
+        }
+
+        #playerScore, #computerScore {
+            font-style: italic;
+        }
+
+        #userInput p {
+            font-weight: bolder;
+        }
+
+    </style>
+</head>
+</head>
+<body>
+
+    <div id="container">
+
+        <h1>Rock, Paper, Scissors</h1>
+        <p>Welcome to Rock, Paper, Scissors! Click the button below to begin the game!</p>
+        
+        <div id="rules">
+            <strong>Rules:</strong>
+            <ul>
+                <li>Rock beats Scissors</li>
+                <li>Scissors beats Paper</li>
+                <li>Paper beats Rock</li>
+                <li>Ties do not increment Computer or Player scores</li>
+                <li>There are 5 rounds per game. Winner has most points at the end.</li>
+            </ul>
+        </div>
+
+        <div id="buttons">
+            <button id="play">Play</button>
+            <button id="reset">Reset</button>
+        </div>
+
+        <div id="gameContainer">
+
+            <div id="stats">
+                <div id="playerStats">
+                    <div id="playerScoreLabel">Player</div>
+                    <div id="playerScore"></div>
+                </div>
+                <div id="computerStats">
+                    <div id="computerScoreLabel">Computer</div>
+                    <div id="computerScore"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="./javascript.js"></script>
+</body>
+</html>
