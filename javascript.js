@@ -2,8 +2,8 @@ const gameContainer = document.querySelector('#gameContainer');
 const playButton = document.querySelector('#play');
 const resetButton = document.querySelector('#reset');
 
-const playerScoreElement = document.querySelector('#playerScore');
 const computerScoreElement = document.querySelector('#computerScore');
+const playerScoreElement = document.querySelector('#playerScore');
 
 // Initialize player and computer scores at 0
 let playerScore = 0;
@@ -12,60 +12,113 @@ let computerScore = 0;
 // Set initial Round to 1
 let gameRound = 1;
 
-
 function createUserInput() {
 
-    // Create userInput Div and append it to gameContainer
-    const userInput = `
-        <div id = "userInput">
-            <p>Make your choice:</p>
-            <div id="choices">
-                <a href="#" id="rock" class="userChoice">
-                    <img src="rock.jfif">'
-                </a>
-                <a href="#" id="paper" class="userChoice">
-                    <img src="paper.jfif">
-                </a>
-                <a href="#" id="scissors" class="userChoice">
-                    <img src="scissors.jfif">
-                </a>
-            </div>
-        </div>
-    `;
+    console.log('createUserInput Fires');
 
-    const userInputCheck = document.querySelector('#userInput')
+    // Check if userInput div is present
+    const userInputCheck = document.querySelector('#userInput');
 
-    if(!userInputCheck) {
-        gameContainer.innerHTML += userInput;
+    // If userInput div is not present, render it and child components
+    if (!userInputCheck) {
+        console.log("There wasn't an input found");
+        // Create a div with id set to userInput, append it to gameContainer
+        const userInputDiv = document.createElement('div');
+        userInputDiv.id = 'userInput';
+        gameContainer.appendChild(userInputDiv);
 
-        // After links are created, loop through and add click event listeners calling handleUserInput
-        const userChoices = document.querySelectorAll('.userChoice');
+        // Create a p with instruction content and append it to userInputDiv
+        const userInputPara = document.createElement('p');
+        userInputPara.textContent = 'Make your choice:';
+        userInputDiv.appendChild(userInputPara);
 
+        // Create a div element with id set to choices and append it to userInputDiv
+        const userChoicesDiv = document.createElement('div');
+        userChoicesDiv.id = 'choices';
+        userInputDiv.appendChild(userChoicesDiv);
+
+        // Set an array of possible user choices
+        const userChoices = ['Rock','Paper','Scissors'];
+
+        // Loop through user choices, create links/images with options
         userChoices.forEach((choice) => {
-            choice.addEventListener('click', () => {
-                handleUserInput(choice.id,gameRound);
+
+            // Create an anchor element with href of #, and id related to the choice, a class of userChoice
+            // and an onclick of handleUserInptu(). Append it to userChoicesDiv
+            const choiceLink = document.createElement('a');
+            choiceLink.id = choice;
+            choiceLink.classList.add('userChoice');
+            userChoicesDiv.appendChild(choiceLink);
+
+            // Create an img element with a src set to the choice and add .jfif, append it to choiceLink
+            const choiceImage = document.createElement('img');
+            choiceImage.src = `${choice}.jfif`;
+            choiceLink.appendChild(choiceImage);
+            
+            // Add event listener to choiceLink to execute handleUserInput
+            choiceLink.addEventListener('click',() => {
+                handleUserInput(choice,gameRound);
             })
-        })
+        });
+    }
+};
+
+function createResultPanel(roundNum,results,winningChoice,losingChoice) {
+
+    // Create a div with id set to results. Append it to gameContainer.
+    const resultsDiv = document.createElement('div');
+    resultsDiv.id = 'results';
+    gameContainer.appendChild(resultsDiv);
+    
+    // Create a div with an id set to 'round(roundNumber)' and append it to resultsDiv
+    const roundDiv = document.createElement('div');
+    roundDiv.id = `round${roundNum}`;
+    resultsDiv.appendChild(roundDiv);
+
+    // Create an hr element and append it to roundDiv
+    const resultSeparator = document.createElement('hr');
+    roundDiv.appendChild(resultSeparator);
+
+    // Create an h2 element with inner text indicating the round number and results
+    // Append it to roundDiv
+    const roundTitle = document.createElement('h2');
+    roundTitle.innerText = `Round ${roundNum} Results:`
+    roundDiv.appendChild(roundTitle);
+
+    // Check for the word tie in result.
+    if (results.includes('tie')) {
+        // If present, create img element calling winningChoice
+        const resultImg = document.createElement('img');
+        resultImg.src = `${winningChoice}.jfif`;
+        resultImg.classList.add('winningImage');
+
+        // Append the image to roundDiv
+        roundDiv.appendChild(resultImg);
+    } else {
+        // If not a tie, create winningImage and losingImage, append to roundDiv
+        const winningImg = document.createElement('img');
+        winningImg.classList.add('winningImage');
+        winningImg.src = `${winningChoice}.jfif`;
+
+        const losingImg = document.createElement('img');
+        losingImg.classList.add('losingImage');
+        losingImg.src = `${losingChoice}.jfif`;
+
+        roundDiv.appendChild(winningImg);
+        roundDiv.appendChild(losingImg);
+        
     }
 
-}
+    // Create a p element with id roundResult and inner text set to results parameter
+    // Append it to roundDiv
+    const roundPara = document.createElement('p');
+    roundPara.id = 'roundResult';
+    roundPara.innerText = results;
+    roundDiv.appendChild(roundPara);
 
-function createResultPanel(roundNum,results) {
-
-    // Create resultPane and append it gameContainer
-    const resultPane = `
-        <div id="results">
-            <div id="round${roundNum}">
-                <hr>
-                <h2>Round ${roundNum} Results:</h2>
-                <p id="roundResult">${results}</p>
-                <hr>
-            </div>
-        </div>
-    `
-
-    gameContainer.innerHTML += resultPane;
-}
+    // Append another resultSepartor to roundDiv
+    roundDiv.appendChild(resultSeparator);
+};
 
 function createGameOutcomePanel() {
 
@@ -79,107 +132,145 @@ function createGameOutcomePanel() {
             return `The game was tied ${playerScore}:${computerScore}`;
         }
     }
-    // Create Game Outcome Panel and append it to gameContainer
-    const gameOutcomePane = `
-        <div id="gameoutcome">
-            <h2>${gameOutcome()}</h2>
-        </div>
-    `;
 
-    gameContainer.innerHTML += gameOutcomePane;
+    // Create Game Outcome Panel and append it to gameContainer
+    const gameOutcomeDiv = document.createElement('div');
+    gameOutcomeDiv.id = 'gameOutcome';
+    gameContainer.appendChild(gameOutcomeDiv);
+
+    // Create an h2 element with the game outcome in it. Append to gameOutcomeDive
+    const gameOutComeTitle = document.createElement('h2');
+    gameOutComeTitle.textContent = `${gameOutcome()}`;
+    gameOutcomeDiv.appendChild(gameOutComeTitle);
+
+};
+
+function removeUserInput() {
+
+    // Check for an element with the userInput id
+    userInputCheck = document.querySelector('#userInput');
+
+    // If there is an element with the userInput id, remove it from it's parent node
+    if(userInputCheck) {
+        userInputCheck.parentNode.removeChild(userInputCheck);
+    }
+};
+
+function removeResultsPanels() {
+
+    // Check for all elements with an id of results
+    const resultsPanelsCheck = document.querySelectorAll('#results');
+
+    // Check for an element with an id of gameOutcome
+    const outcomePanel = document.querySelector('#gameOutcome');
+    
+    //If there are results panels and an outcome panel, remove all results panels and the game outcome panel
+    if (resultsPanelsCheck && outcomePanel) {
+
+        outcomePanel.parentNode.removeChild(outcomePanel);
+        
+        resultsPanelsCheck.forEach((panel) => {
+            panel.parentNode.removeChild(panel);
+        })
+    // If there's just results panels, remove them
+    } else if (resultsPanelsCheck) {
+
+        resultsPanelsCheck.forEach((panel) => {
+            panel.parentNode.removeChild(panel);
+        })
+    }
 }
 
 function getComputerChoice() {
 
     // Generate a random number between 1 and 3 inclusive
-    const computerChoice = Math.floor(Math.random() * (4 - 1) + 1)
+    const computerChoice = Math.floor(Math.random() * (4 - 1) + 1);
 
     // Return rock, paper, or scissors based on number value of computerChoice
     switch(computerChoice) {
         case 1:
-            return 'rock';
+            return 'Rock';
             break;
         case 2:
-            return 'paper';
+            return 'Paper';
             break;
         case 3:
-            return 'scissors';
+            return 'Scissors';
             break;
     }
 }
 
 function getResults(computerChoice, playerChoice) {
     
-    if(playerChoice === 'rock' && computerChoice === 'scissors' || 
-        playerChoice === 'paper' && computerChoice === 'rock' || 
-        playerChoice === 'scissors' && computerChoice === 'paper') {
+    if(playerChoice === 'Rock' && computerChoice === 'Scissors' || 
+        playerChoice === 'Paper' && computerChoice === 'Rock' || 
+        playerChoice === 'Scissors' && computerChoice === 'Paper') {
         // If player choice beats computer choice, return a string declaring player the winner
         incrementPlayerScore();
-        console.log(playerScore);
-        return `Player wins! ${playerChoice} beats ${computerChoice}!`;
+        return {
+            winningChoice: playerChoice,
+            losingChoice: computerChoice,
+            result: `Player wins! ${playerChoice} beats ${computerChoice}!`
+        };
     } else if(playerChoice === computerChoice) {
         // If player choice and computer choice are the same, return a string delcaring a tie
-        return `It's a tie! Both chose ${playerChoice}.`;
+        return {
+            winningChoice: playerChoice,
+            losingChoice: computerChoice,
+            result: `It's a tie! Both chose ${playerChoice}.`
+        };
     } else {
         // Otherwise, return string declaring computer the winner
         incrementComputerScore();
-        console.log(computerScore);
-        return `Computer wins! ${computerChoice} beats ${playerChoice}!`;
+        return {
+            winningChoice: computerChoice,
+            losingChoice: playerChoice,
+            result: `Computer wins! ${computerChoice} beats ${playerChoice}!`
+        };
     };
-}
-
-function removeUserInput() {
-    
-    const userInput = document.querySelector('#userInput');
-    
-    gameContainer.removeChild(userInput);
-}
-
-function removeResultsPanels() {
-
-    const resultPanels = document.querySelectorAll('#results');
-    const outcomePanel = document.querySelector('#gameoutcome');
-
-    if(resultPanels && outcomePanel) {
-
-        resultPanels.forEach((result) => {
-            gameContainer.removeChild(result);
-        })
-
-        gameContainer.removeChild(outcomePanel);
-    } else if(resultPanels) {
-        resultPanels.forEach((result) => {
-            gameContainer.removeChild(result);
-        })
-    }
 }
 
 function handleUserInput(selection, roundNum) {
 
+    console.log('handleUserInput fires')
+
     // Increment the round count
     gameRound++;
+    console.log('gameRound incremented')
 
-    // Generate a random computer choice
+    // Generate a random computer choicehandleUser
     const generatedComputerChoice = getComputerChoice();
+    console.log('Computer choice made')
 
     // Get the round results
     const roundResult = getResults(generatedComputerChoice,selection);
+    console.log('Round results analyzed')
 
     // Remove the user input panel
     removeUserInput();
+    console.log('User input removed')
 
     // Create another user input if not on 5th round, otherwise generate a game outcome panel
     if(roundNum !== 5) {
         // Insert a result panel
-        createResultPanel(roundNum,roundResult);
+        createResultPanel(roundNum,roundResult.result,roundResult.winningChoice,roundResult.losingChoice);
+        console.log('Results panel created')
 
         // Insert a user input panel
         createUserInput();
+
     } else {
+        // Insert a result panel
+        createResultPanel(roundNum,roundResult.result,roundResult.winningChoice,roundResult.losingChoice);
+
+        // Insert a game outcome panel
         createGameOutcomePanel();
+
     }
 
-}
+    window.scrollTo(0,document.body.scrollHeight);
+
+};
 
 function resetGame() {
 
@@ -190,6 +281,13 @@ function resetGame() {
     // Render initial scores
     playerScoreElement.textContent = playerScore;
     computerScoreElement.textContent = computerScore;
+
+    // Remove lastScore class from playerScoreElement and computerScoreElemnent
+    if(playerScoreElement.classList.contains('lastScore')) {
+        playerScoreElement.classList.remove('lastScore');
+    } else if (computerScoreElement.classList.contains('lastScore')) {
+        computerScoreElement.classList.remove('lastScore');
+    }
 
     // Set initial Round to 1
     gameRound = 1;
@@ -202,28 +300,41 @@ function resetGame() {
 }
 
 function incrementPlayerScore() {
+    
+    // Increment player score up by one
     playerScore += 1;
+
+    // Render updated player score on page
     playerScoreElement.textContent = playerScore;
-}
 
-function incrementComputerScore() {
-    computerScore += 1;
-    computerScoreElement.textContent = computerScore;
-}
+    // Add lastscore class to player score element
+    playerScoreElement.classList.add('lastScore');
 
-function fuckWithScores() {
-    x = 5;
-
-    if(x == 5) {
-        playerScore += 1;
-        playerScoreElement.textContent = playerScore;
-        return 'Something';
+    // Check for lastScore class on computer score element and remove if found
+    if (computerScoreElement.classList.contains('lastScore')) {
+        computerScoreElement.classList.remove('lastScore');
     }
 }
 
+function incrementComputerScore() {
+
+    // Increment computer score by one
+    computerScore += 1;
+
+    // Render new score on page
+    computerScoreElement.textContent = computerScore;
+
+    // Add lastscore class to computer score element
+    computerScoreElement.classList.add('lastScore');
+
+    // Check for lastScore class on player score element and remove if found
+    if (playerScoreElement.classList.contains('lastScore')) {
+        playerScoreElement.classList.remove('lastScore');
+    }
+}
 
 playButton.addEventListener('click', () => {
-    createUserInput();
+    createUserInput();    
 })
 
 resetButton.addEventListener('click',() => {
