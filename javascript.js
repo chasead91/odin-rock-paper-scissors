@@ -2,15 +2,15 @@ const gameContainer = document.querySelector('#gameContainer');
 const playButton = document.querySelector('#play');
 const resetButton = document.querySelector('#reset');
 
-const computerScoreElement = document.querySelector('#computerScore');
-const playerScoreElement = document.querySelector('#playerScore');
-
 // Initialize player and computer scores at 0
 let playerScore = 0;
 let computerScore = 0;
 
 // Set initial Round to 1
 let gameRound = 1;
+
+// Initialize last scored indexing variable
+let lastScored = '';
 
 function createUserInput() {
 
@@ -60,9 +60,64 @@ function createUserInput() {
             // Add event listener to choiceLink to execute handleUserInput
             choiceLink.addEventListener('click',() => {
                 handleUserInput(choice,gameRound);
-            })
+            });
+
         });
-    }
+
+        // Create stats div and append to userInputDiv
+        const gameStats = document.createElement('div');
+        gameStats.id = 'stats';
+        gameStats.classList.add('stats-container','flex','full-width');
+        userInputDiv.appendChild(gameStats);
+
+        // Create playerStats div and append to stats
+        const playerStats = document.createElement('div');
+        playerStats.id = 'playerStats';
+        playerStats.classList.add('stats','flex');
+        gameStats.appendChild(playerStats);
+
+        // Create playerScoreLabel and append to playerStats
+        const playerScoreLabel = document.createElement('div');
+        playerScoreLabel.id = 'playerScoreLabel';
+        playerScoreLabel.classList.add('score-label');
+        playerScoreLabel.innerText = 'Player';
+        playerStats.appendChild(playerScoreLabel);
+
+        // Create playerScore and append to playerStats
+        const playerScoreElement = document.createElement('div');
+        playerScoreElement.id = 'playerScore';
+        playerScoreElement.classList.add('score');
+        playerScoreElement.innerText = playerScore;
+        playerStats.appendChild(playerScoreElement);
+
+        // Create computerStats div and append to stats
+        const computerStats = document.createElement('div');
+        computerStats.id = 'computerStats';
+        computerStats.classList.add('stats','flex');
+        gameStats.appendChild(computerStats);
+        
+        // Create computerScoreLable and append to computerStats
+        const computerScoreLabel = document.createElement('div');
+        computerScoreLabel.id = 'computerScoreLabel';
+        computerScoreLabel.classList.add('score-label');
+        computerScoreLabel.innerText = 'Computer';
+        computerStats.appendChild(computerScoreLabel);
+
+        // Create computerScore and append to computerStats
+        const computerScoreElement = document.createElement('div');
+        computerScoreElement.id = 'computerScore';
+        computerScoreElement.classList.add('score');
+        computerScoreElement.innerText = computerScore;
+        computerStats.appendChild(computerScoreElement);
+
+        // Check lastScore Element and add class accordingly
+        if (lastScored === 'player') {
+            playerStats.classList.add('latest-scored');
+        } else if (lastScored === 'computer') {
+            computerStats.classList.add('latest-scored');
+        };
+
+    };
 };
 
 function createResultPanel(roundNum,results,winningChoice,losingChoice) {
@@ -84,7 +139,7 @@ function createResultPanel(roundNum,results,winningChoice,losingChoice) {
     // Create an h2 element with inner text indicating the round number and results
     // Append it to roundDiv
     const roundTitle = document.createElement('h2');
-    roundTitle.innerText = `Round ${roundNum} Results:`
+    roundTitle.innerText = `Round ${roundNum} Results:`;
     roundDiv.appendChild(roundTitle);
 
     // Check for the word tie in result.
@@ -138,8 +193,8 @@ function createGameOutcomePanel() {
             return `Computer wins ${computerScore}:${playerScore}`;
         } else if (playerScore === computerScore) {
             return `The game was tied ${playerScore}:${computerScore}`;
-        }
-    }
+        };
+    };
 
     // Create Game Outcome Panel and append it to gameContainer
     const gameOutcomeDiv = document.createElement('div');
@@ -179,15 +234,15 @@ function removeResultsPanels() {
         
         resultsPanelsCheck.forEach((panel) => {
             panel.parentNode.removeChild(panel);
-        })
-    // If there's just results panels, remove them
+        });
+    // If there are just results panels, remove them
     } else if (resultsPanelsCheck) {
 
         resultsPanelsCheck.forEach((panel) => {
             panel.parentNode.removeChild(panel);
-        })
-    }
-}
+        });
+    };
+};
 
 function getComputerChoice() {
 
@@ -205,8 +260,8 @@ function getComputerChoice() {
         case 3:
             return 'Scissors';
             break;
-    }
-}
+    };
+};
 
 function getResults(computerChoice, playerChoice) {
     
@@ -222,6 +277,7 @@ function getResults(computerChoice, playerChoice) {
         };
     } else if(playerChoice === computerChoice) {
         // If player choice and computer choice are the same, return a string delcaring a tie
+        lastScored = '';
         return {
             winningChoice: playerChoice,
             losingChoice: computerChoice,
@@ -236,7 +292,7 @@ function getResults(computerChoice, playerChoice) {
             result: `Computer wins! ${computerChoice} beats ${playerChoice}!`
         };
     };
-}
+};
 
 function handleUserInput(selection, roundNum) {
 
@@ -269,7 +325,7 @@ function handleUserInput(selection, roundNum) {
 
         playButton.disabled = true;
 
-    }
+    };
 
     // Set focus to end of page
     window.scrollTo(0,document.body.scrollHeight);
@@ -282,19 +338,11 @@ function resetGame() {
     playerScore = 0;
     computerScore = 0;
 
-    // Render initial scores
-    playerScoreElement.textContent = playerScore;
-    computerScoreElement.textContent = computerScore;
-
-    // Remove lastScore class from playerScoreElement and computerScoreElemnent
-    if(playerScoreElement.classList.contains('lastScore')) {
-        playerScoreElement.classList.remove('lastScore');
-    } else if (computerScoreElement.classList.contains('lastScore')) {
-        computerScoreElement.classList.remove('lastScore');
-    }
-
     // Set initial Round to 1
     gameRound = 1;
+
+    // Reset lastScored
+    lastScored = '';
 
     // Remove any user input pane
     removeUserInput();
@@ -304,46 +352,31 @@ function resetGame() {
 
     // Enable play button
     playButton.disabled = false;
-}
+};
 
 function incrementPlayerScore() {
     
     // Increment player score up by one
     playerScore += 1;
 
-    // Render updated player score on page
-    playerScoreElement.textContent = playerScore;
+    // Set lastScored to player
+    lastScored = 'player';
 
-    // Add lastscore class to player score element
-    playerScoreElement.classList.add('lastScore');
-
-    // Check for lastScore class on computer score element and remove if found
-    if (computerScoreElement.classList.contains('lastScore')) {
-        computerScoreElement.classList.remove('lastScore');
-    }
-}
+};
 
 function incrementComputerScore() {
 
     // Increment computer score by one
     computerScore += 1;
 
-    // Render new score on page
-    computerScoreElement.textContent = computerScore;
-
-    // Add lastscore class to computer score element
-    computerScoreElement.classList.add('lastScore');
-
-    // Check for lastScore class on player score element and remove if found
-    if (playerScoreElement.classList.contains('lastScore')) {
-        playerScoreElement.classList.remove('lastScore');
-    }
-}
+    // Set lastScored to computer
+    lastScored = 'computer';
+};
 
 playButton.addEventListener('click', () => {
     createUserInput();    
-})
+});
 
 resetButton.addEventListener('click',() => {
     resetGame();
-})
+});

@@ -41,6 +41,7 @@ body {
 
 .stats {
     padding: 5px;
+    margin-top: 5px;
 }
 
 .user-input {
@@ -78,8 +79,9 @@ body {
     font-weight: bolder;
 }
 
-.lastScore {
+.latest-scored {
     color: green;
+    font-weight: bolder;
 }
 
 .img-winning {
