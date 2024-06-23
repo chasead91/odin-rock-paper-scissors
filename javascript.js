@@ -14,27 +14,28 @@ let gameRound = 1;
 
 function createUserInput() {
 
-    console.log('createUserInput Fires');
-
     // Check if userInput div is present
     const userInputCheck = document.querySelector('#userInput');
 
     // If userInput div is not present, render it and child components
     if (!userInputCheck) {
-        console.log("There wasn't an input found");
+
         // Create a div with id set to userInput, append it to gameContainer
         const userInputDiv = document.createElement('div');
         userInputDiv.id = 'userInput';
+        userInputDiv.classList.add('user-input', 'flex', 'full-width');
         gameContainer.appendChild(userInputDiv);
 
-        // Create a p with instruction content and append it to userInputDiv
+        // Create a p element with instruction content and append it to userInputDiv
         const userInputPara = document.createElement('p');
+        userInputPara.classList.add('user-input-para');
         userInputPara.textContent = 'Make your choice:';
         userInputDiv.appendChild(userInputPara);
 
         // Create a div element with id set to choices and append it to userInputDiv
         const userChoicesDiv = document.createElement('div');
         userChoicesDiv.id = 'choices';
+        userChoicesDiv.classList.add('choices', 'flex', 'full-width');
         userInputDiv.appendChild(userChoicesDiv);
 
         // Set an array of possible user choices
@@ -43,8 +44,8 @@ function createUserInput() {
         // Loop through user choices, create links/images with options
         userChoices.forEach((choice) => {
 
-            // Create an anchor element with href of #, and id related to the choice, a class of userChoice
-            // and an onclick of handleUserInptu(). Append it to userChoicesDiv
+            // Create an anchor element with an id equal to the choice, a class of userChoice
+            // and an onclick of handleUserInput(). Append it to userChoicesDiv
             const choiceLink = document.createElement('a');
             choiceLink.id = choice;
             choiceLink.classList.add('userChoice');
@@ -53,6 +54,7 @@ function createUserInput() {
             // Create an img element with a src set to the choice and add .jfif, append it to choiceLink
             const choiceImage = document.createElement('img');
             choiceImage.src = `${choice}.jfif`;
+            choiceImage.classList.add('img');
             choiceLink.appendChild(choiceImage);
             
             // Add event listener to choiceLink to execute handleUserInput
@@ -87,21 +89,27 @@ function createResultPanel(roundNum,results,winningChoice,losingChoice) {
 
     // Check for the word tie in result.
     if (results.includes('tie')) {
-        // If present, create img element calling winningChoice
+
+        // If present, create img element with the img and img-winning classes
         const resultImg = document.createElement('img');
         resultImg.src = `${winningChoice}.jfif`;
-        resultImg.classList.add('winningImage');
+        resultImg.classList.add('img');
+        resultImg.classList.add('img-winning');
 
         // Append the image to roundDiv
         roundDiv.appendChild(resultImg);
+
     } else {
-        // If not a tie, create winningImage and losingImage, append to roundDiv
+
+        // If not a tie, create winning and losing image and append to roundDiv
         const winningImg = document.createElement('img');
-        winningImg.classList.add('winningImage');
+        winningImg.classList.add('img');
+        winningImg.classList.add('img-winning');
         winningImg.src = `${winningChoice}.jfif`;
 
         const losingImg = document.createElement('img');
-        losingImg.classList.add('losingImage');
+        losingImg.classList.add('img');
+        losingImg.classList.add('img-losing');
         losingImg.src = `${losingChoice}.jfif`;
 
         roundDiv.appendChild(winningImg);
@@ -232,29 +240,22 @@ function getResults(computerChoice, playerChoice) {
 
 function handleUserInput(selection, roundNum) {
 
-    console.log('handleUserInput fires')
-
     // Increment the round count
     gameRound++;
-    console.log('gameRound incremented')
 
-    // Generate a random computer choicehandleUser
+    // Generate a random computer choice
     const generatedComputerChoice = getComputerChoice();
-    console.log('Computer choice made')
 
     // Get the round results
     const roundResult = getResults(generatedComputerChoice,selection);
-    console.log('Round results analyzed')
 
     // Remove the user input panel
     removeUserInput();
-    console.log('User input removed')
 
     // Create another user input if not on 5th round, otherwise generate a game outcome panel
     if(roundNum !== 5) {
         // Insert a result panel
         createResultPanel(roundNum,roundResult.result,roundResult.winningChoice,roundResult.losingChoice);
-        console.log('Results panel created')
 
         // Insert a user input panel
         createUserInput();
@@ -268,6 +269,7 @@ function handleUserInput(selection, roundNum) {
 
     }
 
+    // Set focus to end of page
     window.scrollTo(0,document.body.scrollHeight);
 
 };

@@ -3,128 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <style>
-
-        body {
-            padding: 0;
-            margin: 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding-top: 50px;
-        }
-
-        #container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
-            border-radius: 10px;
-            padding: 10px;
-        }
-
-        #rules {
-            width: 100%;
-        }
-
-        #gameContainer {
-            width: 100%;
-            margin-top: 10px;
-        }
-
-        #stats {
-            width: 100%;
-            display: flex;
-            flex-direction: row;
-            justify-content: space-between;
-        }
-
-        #playerStats, #computerStats {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 5px;
-        }
-
-        #userInput {
-            width: 100%;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        #userInput img {
-            width: 100px;
-            height: 100px;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
-        }
-
-        #choices {
-            display: flex;
-            justify-content: space-around;
-            width: 100%;
-        }
-
-        button {
-            background-color: transparent;
-            border: 1px solid black;
-            border-radius: 5px;
-            padding: 5px;
-            font-size: 16px;
-        }
-
-        button:hover {
-            background-color: black;
-            color: white;
-            border: 1px solid white;
-        }
-
-        #playerScoreLabel, #computerScoreLabel {
-            font-weight: bolder;
-        }
-
-        #playerScore, #computerScore {
-            font-style: italic;
-        }
-
-        #userInput p {
-            font-weight: bolder;
-        }
-
-        .lastScore {
-            color: green;
-        }
-
-        .winningImage {
-            width: 100px;
-            height: 100px;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
-            margin-right: 10px;
-        }
-
-        .losingImage {
-            width: 100px;
-            height: 100px;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
-            opacity: 50%;
-        }
-
-    </style>
+    <title>Rock, Paper, Scissors</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 </head>
 <body>
 
-    <div id="container">
+    <div id="container" class="container flex">
 
         <h1>Rock, Paper, Scissors</h1>
         <p>Welcome to Rock, Paper, Scissors! Click the button below to begin the game!</p>
         
-        <div id="rules">
+        <div id="rules" class="full-width">
             <strong>Rules:</strong>
             <ul>
                 <li>Rock beats Scissors</li>
@@ -136,26 +26,23 @@
         </div>
 
         <div id="buttons">
-            <button id="play">Play</button>
-            <button id="reset">Reset</button>
+            <button id="play" class="btn">Play</button>
+            <button id="reset" class="btn">Reset</button>
         </div>
 
-        <div id="gameContainer">
-
-            <div id="stats">
-                <div id="playerStats">
-                    <div id="playerScoreLabel">Player</div>
-                    <div id="playerScore"></div>
+        <div id="gameContainer" class="game-container full-width">
+            <div id="stats" class="stats-container flex full-width">
+                <div id="playerStats" class="stats flex">
+                    <div id="playerScoreLabel" class="score-label">Player</div>
+                    <div id="playerScore" class="score"></div>
                 </div>
-                <div id="computerStats">
-                    <div id="computerScoreLabel">Computer</div>
-                    <div id="computerScore"></div>
+                <div id="computerStats" class="stats flex">
+                    <div id="computerScoreLabel" class="score-label">Computer</div>
+                    <div id="computerScore" class="score"></div>
                 </div>
             </div>
         </div>
     </div>
-
-    <div id="focusPoint"></div>
     
     <script src="./javascript.js"></script>
 </body>
