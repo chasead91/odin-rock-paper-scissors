@@ -267,6 +267,8 @@ function handleUserInput(selection, roundNum) {
         // Insert a game outcome panel
         createGameOutcomePanel();
 
+        playButton.disabled = true;
+
     }
 
     // Set focus to end of page
@@ -299,6 +301,9 @@ function resetGame() {
 
     // Remove results panels
     removeResultsPanels();
+
+    // Enable play button
+    playButton.disabled = false;
 }
 
 function incrementPlayerScore() {
